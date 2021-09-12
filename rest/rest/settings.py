@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,9 +39,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_yasg',
     'knox',
     'accounts',
+    "authentication",
+    "contacts",
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS' : {
+        "Auth Token eg [Bearer (JWT) ]" : {
+            "type" : "apiKey",
+            "name" : "Authorization",
+            "i:": "header"
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,7 +142,14 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : [
-        'knox.auth.TokenAuthentication',
-    ]
+    # 'DEFAULT_AUTHENTICATION_CLASSES' : [
+    #     'knox.auth.TokenAuthentication',
+    # ]
+    'DEFAULT_AUTHENTICATION_CLASSES' : (
+        'authentication.backends.JWTAuthentication',
+    )
 }
+
+# jwt
+# JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY')
+JWT_SECRET_KEY= '123'
